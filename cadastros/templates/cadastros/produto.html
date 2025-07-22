@@ -1,0 +1,115 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adicionar Produto</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+  <style>
+/* styles.css */
+
+/* Estilos gerais */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+  text-align: center;
+  margin-top: 0;
+}
+
+.button-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 14px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+.btn-outline-secondary {
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #ccc;
+}
+
+.btn-outline-success {
+  color: #28a745;
+  border: 1px solid #28a745;
+}
+
+.btn-outline-success:hover {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.form-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.cadastro-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.cadastro-form input[type="text"],
+.cadastro-form input[type="email"] {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.cadastro-form .button-container {
+  text-align: right;
+  margin-top: 10px;
+}
+
+
+</style>
+
+</head>
+<body>
+  <div class="container">
+    <h3>Adicionar Produto</h3>
+    <div class="form-container">
+      <form class="cadastro-form" action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="button-container">
+          <button type="submit" class="btn btn-primary">Salvar</button>
+          <a href="{% url 'lista-produto' %}" class="btn btn-secondary btn-sm" title="Voltar">Voltar</a>
+          <a href="{% url 'inicio' %}" class="btn btn-secondary btn-sm" title="Página inicial">Página inicial</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

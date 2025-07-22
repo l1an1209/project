@@ -1,0 +1,48 @@
+{% load static %}
+
+{% block content %}
+  <div class="container">
+    <h1>Produtos</h1>
+    <div class="search-form">
+      <form action="{% url 'lista-produto' %}" method="get">
+        <div class="input-group">
+          <input type="text" id="search" name="descricao" value="{{ request.GET.descricao }}" placeholder="Buscar..." class="form-control">
+          <button type="submit" class="btn btn-primary">Buscar</button>
+          <button class="btn btn-outline-danger" type="button">
+            <a href="{% url 'lista-produto' %}" class="text-decoration-none text-reset">Limpar</a>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Marca</th>
+          <th>Detalhes</th>
+          <th>Data de Chegada</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for produto in object_list %}
+          <tr>
+            <td>{{ produto.pk }}</td>
+            <td>{{ produto.marca_produto }}</td>
+            <td>{{ produto.detalher_produto }}</td>
+            <td>{{ produto.data_chegada }}</td>
+            <td>
+              <a href="{% url 'editar-produto' produto.pk %}" class="btn btn-warning btn-sm" title="Editar Produto">Editar</a>
+              <a href="{% url 'excluir-produto' produto.pk %}" class="btn btn-danger btn-sm" title="Excluir Produto">Excluir</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5">Nenhum produto encontrado.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

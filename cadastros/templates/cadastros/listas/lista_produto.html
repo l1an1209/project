@@ -1,0 +1,215 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista Produto</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    /* Estilos gerais */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-top: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+      margin-top: 0;
+    }
+
+    /* Formulário de busca */
+    .search-form {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .search-form input[type="text"] {
+      width: 200px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    /* Grupo de botões */
+    .button-group {
+      margin-bottom: 20px;
+    }
+
+    .button-group .btn {
+      margin-right: 10px;
+    }
+
+    /* Tabela */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .table th {
+      background-color: #f9f9f9;
+      font-weight: bold;
+    }
+
+    .table td {
+      background-color: #fff;
+    }
+
+    .table tbody tr:nth-child(even) td {
+      background-color: #f5f5f5;
+    }
+
+    /* Botões */
+    .btn {
+      display: inline-block;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #0069d9;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+    }
+
+    .btn-primary:hover {
+      background-color: #0069d9;
+    }
+
+    .btn-warning {
+      background-color: #ffc107;
+    }
+
+    .btn-warning:hover {
+      background-color: #e0a800;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    .text-decoration-none {
+      text-decoration: none !important;
+    }
+
+    .text-reset {
+      color: inherit !important;
+    }
+
+    .btn-outline-danger {
+      color: #dc3545;
+      border-color: #dc3545;
+    }
+
+    .btn-outline-danger:hover {
+      background-color: #dc3545;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  {% block titulo %}
+    <title>Página Inicial</title>
+  {% endblock %}
+
+  {% block Conteudo %}
+    <div class="container">
+      <h1>Produtos</h1>
+      <div class="search-form">
+        <form action="{% url 'pesquisar-produto' %}" method="get">
+          <div class="input-group">
+            <input type="text" id="search" name="descricao" value="{{ request.GET.descricao }}" placeholder="Buscar..." class="form-control">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <button class="btn btn-outline-danger" type="button">
+              <a href="{% url 'lista-produto' %}" class="text-decoration-none text-reset">Limpar</a>
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      
+
+      <div class="button-group">
+        <a href="{% url 'produto' %}" class="btn btn-primary" title="Adicionar Produto">Adicionar</a>
+        <a href="{% url 'inicio' %}" class="btn btn-primary" title="Página Inicial">Página Inicial</a>
+      </div>
+
+      <hr>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Modelo</th>
+              <th>Descrição</th>
+              <th>Preço</th>
+              <th>Quantidade</th>
+              <th>Valor Total</th>            
+              <th>Opção</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for produto in object_list %}
+              <tr>
+                <td>{{ produto.pk }}</td>
+                <td>{{ produto.marca_produto }}</td>
+                <td>{{ produto.descricao }}</td>
+                <td>{{ produto.preco_unitario }}</td>
+                <td>{{ produto.quantidade}}</td>
+                <td>{{ produto.valor }}</td>
+                
+                <td>
+                  <a href="{% url 'editar-produto' produto.pk %}" class="btn btn-warning btn-sm" title="Editar Produto">Editar</a>
+                  <a href="{% url 'excluir-produto' produto.pk %}" class="btn btn-danger btn-sm" title="Excluir Produto">Excluir</a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4">Nenhum Produto Registrado</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endblock %}
+
+</body>
+</html>
