@@ -32,7 +32,7 @@ decorator==5.1.1
 defusedxml==0.7.1
 distro==1.9.0
 dj-database-url==3.0.1
-Django==5.1.6
+Django
 django-bootstrap4==24.3
 django-cors-headers==4.6.0
 django-heroku==0.3.1
