@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: django-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn project.wsgi:application
+    envVars:
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        value: django-insecure-pycu=ytu*og)oc6xe@)y%4v)9p$z_h4hb9dt-twnhku#-hq(hr
+      - key: DATABASE_URL
+        value: sqlite:///db.sqlite3
