@@ -98,3 +98,4 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Chave padrão de campo
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
