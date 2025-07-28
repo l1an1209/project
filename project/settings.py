@@ -60,12 +60,9 @@ TEMPLATES = [
 # Banco de Dados (padrão: PostgreSQL, fallback: SQLite)
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://postgres:FEctjOautgPwgFoDTddgxHDfMofBMiWM@postgres-9ffd.railway.internal:5432/railway',
-        conn_max_age=600,
-        ssl_require=True
+        default='postgresql://postgres:FEctjOautgPwgFoDTddgxHDfMofBMiWM@switchback.proxy.rlwy.net:27492/railway'
     )
 }
-
 # Validação de senha
 AUTH_PASSWORD_VALIDATORS = [
     {
