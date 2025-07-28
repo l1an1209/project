@@ -6,10 +6,13 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Segurança
-SECRET_KEY = os.environ.get('SECRET_KEY', 'chave-secreta-padrao')
-DEBUG = os.environ.get('DEBUG', '').lower() == 'true'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'de80ae6efd7bc5211e1598d806fb924b')
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+DEBUG = True
+
+ALLOWED_HOSTS = ['*']
+
 
 
 # Aplicativos
