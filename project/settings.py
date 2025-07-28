@@ -7,8 +7,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Segurança
 SECRET_KEY = os.environ.get('SECRET_KEY', 'chave-secreta-padrao')
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = ['project-0p1l.onrender.com', 'localhost', '127.0.0.1']
+DEBUG = os.environ.get('DEBUG', '').lower() == 'true'
+
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
 
 # Aplicativos
 INSTALLED_APPS = [
@@ -58,8 +60,9 @@ TEMPLATES = [
 # Banco de Dados (padrão: PostgreSQL, fallback: SQLite)
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'),
-        conn_max_age=600
+        default='postgresql://postgres:FEctjOautgPwgFoDTddgxHDfMofBMiWM@postgres-9ffd.railway.internal:5432/railway',
+        conn_max_age=600,
+        ssl_require=True
     )
 }
 
