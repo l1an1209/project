@@ -1,90 +1,246 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Confirmação de Exclusão</title>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+  <title>Confirmação de Exclusão | Sistema</title>
+  
+  <!-- Fontes e Ícones -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --danger: #ef4444;
+      --danger-dark: #dc2626;
+      --light: #f8fafc;
+      --dark: #1e293b;
+      --gray: #64748b;
+      --light-gray: #e2e8f0;
+      --white: #ffffff;
+      --border-radius: 0.75rem;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f5f9;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .confirmation-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .confirmation-card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 480px;
+      overflow: hidden;
+      text-align: center;
+      border-top: 4px solid var(--danger);
+    }
+
+    .confirmation-header {
+      padding: 2rem 2rem 1rem;
+    }
+
+    .confirmation-icon {
+      font-size: 3.5rem;
+      color: var(--danger);
+      margin-bottom: 1rem;
+    }
+
+    .confirmation-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+
+    .confirmation-subtitle {
+      color: var(--gray);
+      font-size: 0.95rem;
+    }
+
+    .confirmation-body {
+      padding: 1rem 2rem;
+    }
+
+    .product-info {
+      background-color: var(--light);
+      border-radius: var(--border-radius);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .product-info-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-info-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .product-label {
+      font-weight: 500;
+      color: var(--gray);
+    }
+
+    .product-value {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .warning-message {
+      background-color: #fef2f2;
+      color: var(--danger);
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .warning-message i {
+      font-size: 1.2rem;
+    }
+
+    .confirmation-form {
+      margin-top: 1.5rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      flex: 1;
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: var(--white);
+      border: none;
+    }
+
+    .btn-danger:hover {
+      background-color: var(--danger-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--gray);
+      border: 1px solid var(--light-gray);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--light);
+      color: var(--dark);
+    }
+
+    @media (max-width: 480px) {
+      .confirmation-container {
+        padding: 1rem;
+      }
+      
+      .confirmation-header {
+        padding: 1.5rem 1.5rem 0.5rem;
+      }
+      
+      .confirmation-body {
+        padding: 1rem;
+      }
+      
+      .btn-group {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
-<style>
-/* styles.css */
-
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  color: #333333fd;
-}
-
-.centered {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.container {
-  max-width: 400px;
-  padding: 32px;
-  background-color: red;
-  border-radius: 8px;
-}
-
-.title {
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 16px;
-}
-
-.description {
-  font-size: 18px;
-  margin-bottom: 16px;
-}
-
-.btn-container {
-  display: flex;
-  justify-content: flex-end;
-}
-
-button {
-  background-color: #dc3545;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #c82333;
-}
-
-</style>
 
 <body>
-  <div class="centered">
-    <div class="container">
-      <div class="title">Confirme para excluir o Registro definitivo</div>
-
-      <div class="description">
-        Deseja excluir o Registro: {{ object.produto }} - Nome: {{ produto.descricao }} - Valor: {{ produto.valor }}
-      </div>
-
-      <form class="confirmation-form" action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-
-        <div class="btn-container">
-          <button type="submit" class="btn btn-danger">Excluir</button>
+  <div class="confirmation-container">
+    <div class="confirmation-card">
+      <div class="confirmation-header">
+        <div class="confirmation-icon">
+          <i class="fas fa-exclamation-triangle"></i>
         </div>
-      </form>
+        <h2 class="confirmation-title">Confirmar Exclusão</h2>
+        <p class="confirmation-subtitle">Esta ação não pode ser desfeita</p>
+      </div>
+      
+      <div class="confirmation-body">
+        <div class="product-info">
+          <div class="product-info-item">
+            <span class="product-label">Produto:</span>
+            <span class="product-value">{{ object.produto }}</span>
+          </div>
+          <div class="product-info-item">
+            <span class="product-label">Descrição:</span>
+            <span class="product-value">{{ produto.descricao }}</span>
+          </div>
+          <div class="product-info-item">
+            <span class="product-label">Valor:</span>
+            <span class="product-value">R$ {{ produto.valor }}</span>
+          </div>
+        </div>
+        
+        <div class="warning-message">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>Todos os dados relacionados serão permanentemente removidos</span>
+        </div>
+        
+        <form class="confirmation-form" action="" method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          
+          <div class="btn-group">
+            <a href="javascript:history.back()" class="btn btn-outline">
+              <i class="fas fa-arrow-left"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-danger">
+              <i class="fas fa-trash-alt"></i> Confirmar Exclusão
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </body>
 </html>
-

@@ -1,217 +1,430 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lista Cliente</title>
+  <title>Gestão de Clientes | Sistema</title>
+  
+  <!-- Fontes e Ícones -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --secondary: #6366f1;
+      --light: #f8fafc;
+      --dark: #1e293b;
+      --gray: #64748b;
+      --light-gray: #e2e8f0;
+      --white: #ffffff;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --border-radius: 0.5rem;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f5f9;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .dashboard-card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card-title i {
+      font-size: 1.25rem;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .search-container {
+      margin-bottom: 1.5rem;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .search-input-group {
+      position: relative;
+      flex: 1;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 3rem;
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background-color: var(--light);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      background-color: var(--white);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      text-decoration: none;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-outline-danger {
+      background-color: transparent;
+      color: #ef4444;
+      border: 1px solid #ef4444;
+    }
+
+    .btn-outline-danger:hover {
+      background-color: #ef4444;
+      color: var(--white);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      border-radius: var(--border-radius);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .client-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--white);
+    }
+
+    .client-table thead th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--gray);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--light-gray);
+      background-color: #f8fafc;
+    }
+
+    .client-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--light-gray);
+      vertical-align: middle;
+    }
+
+    .client-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .client-table tbody tr:hover {
+      background-color: rgba(79, 70, 229, 0.03);
+    }
+
+    .client-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .client-name {
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    .client-email {
+      color: var(--gray);
+      font-size: 0.875rem;
+    }
+
+    .client-contact {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--dark);
+    }
+
+    .client-contact i {
+      color: var(--primary);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.35em 0.65em;
+      font-size: 0.75em;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: 50rem;
+    }
+
+    .badge-primary {
+      color: var(--white);
+      background-color: var(--primary);
+    }
+
+    .btn-sm {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-warning {
+      background-color: #f59e0b;
+      color: white;
+    }
+
+    .btn-warning:hover {
+      background-color: #d97706;
+    }
+
+    .btn-danger {
+      background-color: #ef4444;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: var(--light-gray);
+      margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-add-client {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-add-client:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+      .search-form {
+        flex-direction: column;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .client-table td, .client-table th {
+        padding: 0.75rem;
+      }
+      
+      .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+    }
+  </style>
 </head>
-<style>
-  /* Estilos gerais */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-}
-h1 {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-top: 20px;
-}
-
-
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-h3 {
-    margin-top: 0;
-}
-
-/* Formulário de busca */
-.search-form {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.search-form input[type="text"] {
-    width: 200px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-}
-
-.search-form .btn-secondary {
-    margin-left: 10px;
-}
-
-/* Grupo de botões */
-.button-group {
-    margin-bottom: 20px;
-}
-
-.button-group .btn {
-    margin-right: 10px;
-}
-
-/* Tabela */
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table th,
-.table td {
-    padding: 10px;
-    border: 1px solid #ccc;
-}
-
-.table th {
-    background-color: #f9f9f9;
-    font-weight: bold;
-}
-
-.table td {
-    background-color: #fff;
-}
-
-.table tbody tr:nth-child(even) td {
-    background-color: #f5f5f5;
-}
-
-/* Botões */
-.btn {
-    display: inline-block;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    
-    color: #fff;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.btn:hover {
-    background-color: #0069d9;
-}
-
-.btn-primary {
-    background-color: #007bff;
-}
-
-.btn-primary:hover {
-    background-color: #0069d9;
-}
-
-.btn-warning {
-    background-color: #ffc107;
-}
-
-.btn-warning:hover {
-    background-color: #e0a800;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-}
-
-
-.text-decoration-none {
-    text-decoration: none !important;
-}
-
-.text-reset {
-    color: inherit !important;
-}
-
-.btn-outline-danger {
-    color: #dc3545;
-    border-color: #dc3545;
-}
-
-.btn-outline-danger:hover {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-</style>
-
 
 <body>
- 
-
-{% block titulo %}
-    <title>Pagina Inicial</title>
-{% endblock %}
-
-{% block Conteudo %}
-    <div class="container">
-        <h1>Clientes</h1>
-        <div class="search-form">
-          <form action="{% url 'Pesquisar' %}" method="get">
-              <div class="input-group">
-                  <input type="text" id="search" name="nome" value="{{ request.GET.nome }}" placeholder="Buscar..." class="form-control">
-                  <button type="submit" class="btn btn-primary">Buscar</button>
-                  <button class="btn btn-outline-danger" type="button">
-                    <a href="{% url 'lista-cliente' %}" class="text-decoration-none text-reset">Limpar</a>
-                  </button>
-                </div>
-          </form>
+  <div class="container">
+    <div class="dashboard-card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-users"></i>
+          <span>Gestão de Clientes</span>
+        </div>
+        <div class="client-count">
+          <span class="badge badge-primary">{{ object_list.count }} clientes</span>
+        </div>
       </div>
       
-        <div class="button-group">
-            <a href="{% url 'cadastros' %}" class="btn btn-primary" title="Adicionar Cliente">Adicionar</a>
-            <a href="{% url 'inicio' %}" class="btn btn-primary" title="Pagina inicial">Pagina inicial</a>
+      <div class="card-body">
+        <div class="search-container">
+          <form action="{% url 'Pesquisar' %}" method="get" class="search-form">
+            <div class="search-input-group">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" id="search" name="nome" value="{{ request.GET.nome }}" 
+                     placeholder="Buscar cliente por nome..." class="search-input">
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-search"></i> Buscar
+            </button>
+            <a href="{% url 'lista-cliente' %}" class="btn btn-outline-danger">
+              <i class="fas fa-times"></i> Limpar
+            </a>
+          </form>
         </div>
-        <hr>
+        
+        <div class="action-buttons">
+          <a href="{% url 'cadastros' %}" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> Adicionar Cliente
+          </a>
+          <a href="{% url 'inicio' %}" class="btn btn-primary">
+            <i class="fas fa-home"></i> Página Inicial
+          </a>
+        </div>
+        
         <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Contato</th>
-                        <th>Opção</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for cliente in object_list %}
-                    <tr>
-                        <td>{{ cliente.pk }}</td>
-                        <td>{{ cliente.nome }}</td>
-                        <td>{{ cliente.email }}</td>
-                        <td>{{ cliente.contato  }}</td>
-                        <td>
-                            <a href="{% url 'editar-cliente' cliente.pk %}" class="btn btn-warning btn-sm" title="Editar Cliente">Editar</a>
-                            <a href="{% url 'excluir-cliente' cliente.pk %}" class="btn btn-danger btn-sm" title="Excluir Cliente">Excluir</a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="4">Nenhum Campo Registrado</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+          <table class="client-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Email</th>
+                <th>Contato</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cliente in object_list %}
+                <tr>
+                  <td><span class="badge badge-primary">#{{ cliente.pk }}</span></td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <div class="client-avatar">{{ cliente.nome|first|upper }}</div>
+                      <div>
+                        <div class="client-name">{{ cliente.nome }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="client-email">{{ cliente.email }}</td>
+                  <td>
+                    <div class="client-contact">
+                      <i class="fas fa-phone-alt"></i>
+                      <span>{{ cliente.contato }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div style="display: flex; gap: 0.5rem;">
+                      <a href="{% url 'editar-cliente' cliente.pk %}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Editar
+                      </a>
+                      <a href="{% url 'excluir-cliente' cliente.pk %}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash-alt"></i> Excluir
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="5">
+                    <div class="empty-state">
+                      <i class="fas fa-user-slash"></i>
+                      <p>Nenhum cliente cadastrado</p>
+                      <a href="{% url 'cadastros' %}" class="btn-add-client">
+                        <i class="fas fa-user-plus"></i> Adicionar Primeiro Cliente
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
+      </div>
     </div>
-
-{% endblock %}
-
+  </div>
 </body>
 </html>
-
-

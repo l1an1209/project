@@ -1,215 +1,373 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lista Produto</title>
-
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <title>Gestão de Produtos | Sistema</title>
+  
+  <!-- Fontes e Ícones -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    /* Estilos gerais */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+    :root {
+      --primary: #4e73df;
+      --primary-dark: #2e59d9;
+      --secondary: #3a4b8d;
+      --success: #1cc88a;
+      --info: #36b9cc;
+      --warning: #f6c23e;
+      --danger: #e74a3b;
+      --light: #f8f9fc;
+      --dark: #5a5c69;
+      --gray: #858796;
+      --light-gray: #dddfeb;
+      --white: #ffffff;
+      --shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+      --border-radius: 0.35rem;
     }
 
-    h1 {
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      color: #333;
-      margin-top: 20px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f5f7ff;
+      color: var(--dark);
+      line-height: 1.6;
     }
 
     .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
     }
 
-    h3 {
-      margin-top: 0;
-    }
-
-    /* Formulário de busca */
-    .search-form {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .search-form input[type="text"] {
-      width: 200px;
-      padding: 5px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-    }
-
-    /* Grupo de botões */
-    .button-group {
-      margin-bottom: 20px;
-    }
-
-    .button-group .btn {
-      margin-right: 10px;
-    }
-
-    /* Tabela */
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .table th,
-    .table td {
-      padding: 10px;
-      border: 1px solid #ccc;
-    }
-
-    .table th {
-      background-color: #f9f9f9;
-      font-weight: bold;
-    }
-
-    .table td {
-      background-color: #fff;
-    }
-
-    .table tbody tr:nth-child(even) td {
-      background-color: #f5f5f5;
-    }
-
-    /* Botões */
-    .btn {
-      display: inline-block;
-      padding: 6px 12px;
+    .card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
       border: none;
-      border-radius: 4px;
-      color: #fff;
-      text-decoration: none;
-      cursor: pointer;
     }
 
-    .btn:hover {
-      background-color: #0069d9;
+    .card-header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+    }
+
+    .card-header h1 {
+      font-weight: 600;
+      font-size: 1.5rem;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card-header h1 i {
+      font-size: 1.25rem;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .search-container {
+      margin-bottom: 1.5rem;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .search-input-group {
+      position: relative;
+      flex: 1;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 3rem;
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background-color: var(--light);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+      background-color: var(--white);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      text-decoration: none;
+      gap: 0.5rem;
     }
 
     .btn-primary {
-      background-color: #007bff;
+      background-color: var(--primary);
+      color: var(--white);
     }
 
     .btn-primary:hover {
-      background-color: #0069d9;
+      background-color: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-outline-danger {
+      background-color: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+
+    .btn-outline-danger:hover {
+      background-color: var(--danger);
+      color: var(--white);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .table {
+      width: 100%;
+      margin-bottom: 1rem;
+      color: var(--dark);
+      border-collapse: collapse;
+    }
+
+    .table thead th {
+      vertical-align: bottom;
+      border-bottom: 2px solid var(--light-gray);
+      padding: 1rem;
+      background-color: var(--light);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      color: var(--gray);
+    }
+
+    .table td {
+      padding: 1rem;
+      vertical-align: middle;
+      border-top: 1px solid var(--light-gray);
+    }
+
+    .table tbody tr:hover {
+      background-color: rgba(78, 115, 223, 0.05);
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    .table-striped tbody tr:nth-of-type(odd):hover {
+      background-color: rgba(78, 115, 223, 0.05);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.35em 0.65em;
+      font-size: 0.75em;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: 0.25rem;
+    }
+
+    .badge-primary {
+      color: var(--white);
+      background-color: var(--primary);
+    }
+
+    .btn-sm {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
     }
 
     .btn-warning {
-      background-color: #ffc107;
+      background-color: var(--warning);
+      color: #2e384d;
     }
 
     .btn-warning:hover {
       background-color: #e0a800;
+      color: #2e384d;
     }
 
     .btn-danger {
-      background-color: #dc3545;
+      background-color: var(--danger);
+      color: var(--white);
     }
 
     .btn-danger:hover {
       background-color: #c82333;
     }
 
-    .text-decoration-none {
-      text-decoration: none !important;
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
     }
 
-    .text-reset {
-      color: inherit !important;
+    .empty-state i {
+      font-size: 3rem;
+      color: var(--light-gray);
+      margin-bottom: 1rem;
     }
 
-    .btn-outline-danger {
-      color: #dc3545;
-      border-color: #dc3545;
+    .empty-state p {
+      color: var(--gray);
+      margin-bottom: 1.5rem;
     }
 
-    .btn-outline-danger:hover {
-      background-color: #dc3545;
-      color: #fff;
+    .text-right {
+      text-align: right;
+    }
+
+    .text-nowrap {
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      .search-form {
+        flex-direction: column;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .table td, .table th {
+        padding: 0.75rem;
+      }
     }
   </style>
 </head>
 
 <body>
-  {% block titulo %}
-    <title>Página Inicial</title>
-  {% endblock %}
-
-  {% block Conteudo %}
-    <div class="container">
-      <h1>Produtos</h1>
-      <div class="search-form">
-        <form action="{% url 'pesquisar-produto' %}" method="get">
-          <div class="input-group">
-            <input type="text" id="search" name="descricao" value="{{ request.GET.descricao }}" placeholder="Buscar..." class="form-control">
-            <button type="submit" class="btn btn-primary">Buscar</button>
-            <button class="btn btn-outline-danger" type="button">
-              <a href="{% url 'lista-produto' %}" class="text-decoration-none text-reset">Limpar</a>
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h1><i class="fas fa-boxes"></i> Gestão de Produtos</h1>
+      </div>
+      
+      <div class="card-body">
+        <div class="search-container">
+          <form action="{% url 'pesquisar-produto' %}" method="get" class="search-form">
+            <div class="search-input-group">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" id="search" name="descricao" value="{{ request.GET.descricao }}" 
+                     placeholder="Buscar por descrição..." class="search-input">
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-search"></i> Buscar
             </button>
-          </div>
-        </form>
-      </div>
-      
-      
-
-      <div class="button-group">
-        <a href="{% url 'produto' %}" class="btn btn-primary" title="Adicionar Produto">Adicionar</a>
-        <a href="{% url 'inicio' %}" class="btn btn-primary" title="Página Inicial">Página Inicial</a>
-      </div>
-
-      <hr>
-
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Modelo</th>
-              <th>Descrição</th>
-              <th>Preço</th>
-              <th>Quantidade</th>
-              <th>Valor Total</th>            
-              <th>Opção</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for produto in object_list %}
+            <a href="{% url 'lista-produto' %}" class="btn btn-outline-danger">
+              <i class="fas fa-times"></i> Limpar
+            </a>
+          </form>
+        </div>
+        
+        <div class="action-buttons">
+          <a href="{% url 'produto' %}" class="btn btn-primary" title="Adicionar Produto">
+            <i class="fas fa-plus"></i> Adicionar
+          </a>
+          <a href="{% url 'inicio' %}" class="btn btn-primary" title="Página Inicial">
+            <i class="fas fa-home"></i> Página Inicial
+          </a>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
               <tr>
-                <td>{{ produto.pk }}</td>
-                <td>{{ produto.marca_produto }}</td>
-                <td>{{ produto.descricao }}</td>
-                <td>{{ produto.preco_unitario }}</td>
-                <td>{{ produto.quantidade}}</td>
-                <td>{{ produto.valor }}</td>
-                
-                <td>
-                  <a href="{% url 'editar-produto' produto.pk %}" class="btn btn-warning btn-sm" title="Editar Produto">Editar</a>
-                  <a href="{% url 'excluir-produto' produto.pk %}" class="btn btn-danger btn-sm" title="Excluir Produto">Excluir</a>
-                </td>
+                <th>ID</th>
+                <th>Modelo</th>
+                <th>Descrição</th>
+                <th class="text-right">Preço</th>
+                <th class="text-right">Quantidade</th>
+                <th class="text-right">Valor Total</th>
+                <th>Opções</th>
               </tr>
-            {% empty %}
-              <tr>
-                <td colspan="4">Nenhum Produto Registrado</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {% for produto in object_list %}
+                <tr>
+                  <td><span class="badge badge-primary">#{{ produto.pk }}</span></td>
+                  <td>{{ produto.marca_produto }}</td>
+                  <td>{{ produto.descricao }}</td>
+                  <td class="text-right text-nowrap">R$ {{ produto.preco_unitario }}</td>
+                  <td class="text-right">{{ produto.quantidade }}</td>
+                  <td class="text-right text-nowrap">R$ {{ produto.valor }}</td>
+                  <td class="text-nowrap">
+                    <a href="{% url 'editar-produto' produto.pk %}" class="btn btn-warning btn-sm" title="Editar Produto">
+                      <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a href="{% url 'excluir-produto' produto.pk %}" class="btn btn-danger btn-sm" title="Excluir Produto">
+                      <i class="fas fa-trash-alt"></i> Excluir
+                    </a>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="7">
+                    <div class="empty-state">
+                      <i class="fas fa-box-open"></i>
+                      <p>Nenhum produto registrado</p>
+                      <a href="{% url 'produto' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Adicionar Produto
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  {% endblock %}
-
+  </div>
 </body>
 </html>

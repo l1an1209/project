@@ -1,1 +1,747 @@
-<a href="{% url 'lista-cliente' %}" class="btn btn-light btn-sm" title="Voltar">Voltar</a>
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão de Estoque | Sistema</title>
+  
+  <!-- Fontes e Ícones -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --secondary: #6366f1;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #3b82f6;
+      --light: #f8fafc;
+      --dark: #1e293b;
+      --gray: #64748b;
+      --light-gray: #e2e8f0;
+      --white: #ffffff;
+      --border-radius: 0.75rem;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f5f9;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .page-title i {
+      color: var(--primary);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-success {
+      background-color: var(--success);
+      color: var(--white);
+      border: none;
+    }
+
+    .btn-success:hover {
+      background-color: #0d9e6e;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .stat-title {
+      font-size: 0.95rem;
+      color: var(--gray);
+      font-weight: 500;
+    }
+
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+    }
+
+    .stat-icon.primary {
+      background-color: var(--primary);
+    }
+
+    .stat-icon.success {
+      background-color: var(--success);
+    }
+
+    .stat-icon.warning {
+      background-color: var(--warning);
+    }
+
+    .stat-icon.danger {
+      background-color: var(--danger);
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-change {
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .stat-change.positive {
+      color: var(--success);
+    }
+
+    .stat-change.negative {
+      color: var(--danger);
+    }
+
+    .inventory-container {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .inventory-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .inventory-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .search-container {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 3rem;
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+
+    .inventory-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .inventory-table thead th {
+      padding: 1rem 1.5rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--gray);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      background-color: var(--light);
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .inventory-table tbody td {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--light-gray);
+      vertical-align: middle;
+    }
+
+    .inventory-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .inventory-table tbody tr:hover {
+      background-color: rgba(79, 70, 229, 0.03);
+    }
+
+    .product-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .product-image {
+      width: 50px;
+      height: 50px;
+      border-radius: var(--border-radius);
+      background-color: var(--light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-name {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .product-sku {
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+
+    .stock-level {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 50rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .stock-high {
+      background-color: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .stock-medium {
+      background-color: rgba(245, 158, 11, 0.1);
+      color: var(--warning);
+    }
+
+    .stock-low {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+
+    .stock-out {
+      background-color: rgba(100, 116, 139, 0.1);
+      color: var(--gray);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-sm {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .btn-info {
+      background-color: var(--info);
+      color: var(--white);
+    }
+
+    .btn-info:hover {
+      background-color: #2563eb;
+      color: var(--white);
+    }
+
+    .btn-warning {
+      background-color: var(--warning);
+      color: var(--white);
+    }
+
+    .btn-warning:hover {
+      background-color: #d97706;
+      color: var(--white);
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: var(--white);
+    }
+
+    .btn-danger:hover {
+      background-color: #dc2626;
+      color: var(--white);
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: flex-end;
+      padding: 1.5rem;
+      border-top: 1px solid var(--light-gray);
+    }
+
+    .pagination-item {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin: 0 0.25rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gray);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .pagination-item:hover, .pagination-item.active {
+      background-color: var(--primary);
+      color: var(--white);
+    }
+
+    .empty-state {
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: var(--light-gray);
+      margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-container {
+        padding: 1.5rem;
+      }
+      
+      .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .inventory-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .search-container {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .dashboard-container {
+        padding: 1rem;
+      }
+      
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .action-buttons {
+        width: 100%;
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+      
+      .inventory-table thead {
+        display: none;
+      }
+      
+      .inventory-table tbody tr {
+        display: block;
+        padding: 1rem;
+        border-bottom: 1px solid var(--light-gray);
+      }
+      
+      .inventory-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        border: none;
+      }
+      
+      .inventory-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--gray);
+        margin-right: 1rem;
+      }
+      
+      .action-buttons {
+        justify-content: flex-end;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <h1 class="page-title">
+        <i class="fas fa-boxes"></i>
+        Gestão de Estoque
+      </h1>
+      <div class="action-buttons">
+        <a href="{ url 'adicionar-produto' }" class="btn btn-primary">
+          <i class="fas fa-plus"></i> Novo Produto
+        </a>
+        <a href="{ url 'relatorio-estoque' }" class="btn btn-success">
+          <i class="fas fa-file-export"></i> Gerar Relatório
+        </a>
+      </div>
+    </div>
+    
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">Total de Produtos</span>
+          <div class="stat-icon primary">
+            <i class="fas fa-box"></i>
+          </div>
+        </div>
+        <div class="stat-value">1,248</div>
+        <div class="stat-change positive">
+          <i class="fas fa-arrow-up"></i>
+          <span>12% em relação ao mês passado</span>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">Valor Total em Estoque</span>
+          <div class="stat-icon success">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+        </div>
+        <div class="stat-value">R$ 284,759</div>
+        <div class="stat-change positive">
+          <i class="fas fa-arrow-up"></i>
+          <span>8% em relação ao mês passado</span>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">Produtos com Baixo Estoque</span>
+          <div class="stat-icon warning">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+        </div>
+        <div class="stat-value">42</div>
+        <div class="stat-change negative">
+          <i class="fas fa-arrow-down"></i>
+          <span>5% em relação ao mês passado</span>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">Produtos Esgotados</span>
+          <div class="stat-icon danger">
+            <i class="fas fa-times-circle"></i>
+          </div>
+        </div>
+        <div class="stat-value">18</div>
+        <div class="stat-change positive">
+          <i class="fas fa-arrow-down"></i>
+          <span>3% em relação ao mês passado</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="inventory-container">
+      <div class="inventory-header">
+        <h2 class="inventory-title">Todos os Produtos</h2>
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Buscar produtos...">
+        </div>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="inventory-table">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Categoria</th>
+              <th>Estoque</th>
+              <th>Preço</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Produto">
+                <div class="product-info">
+                  <div class="product-image">
+                    <img src="https://via.placeholder.com/50" alt="Notebook Pro">
+                  </div>
+                  <div class="product-details">
+                    <span class="product-name">Notebook Pro</span>
+                    <span class="product-sku">#SKU-2023-001</span>
+                  </div>
+                </div>
+              </td>
+              <td data-label="Categoria">Eletrônicos</td>
+              <td data-label="Estoque">156</td>
+              <td data-label="Preço">R$ 4.299</td>
+              <td data-label="Status">
+                <span class="stock-level stock-high">Disponível</span>
+              </td>
+              <td data-label="Ações">
+                <div class="action-buttons">
+                  <a href="#" class="btn btn-info btn-sm">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="#" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            
+            <tr>
+              <td data-label="Produto">
+                <div class="product-info">
+                  <div class="product-image">
+                    <img src="https://via.placeholder.com/50" alt="Smartphone X">
+                  </div>
+                  <div class="product-details">
+                    <span class="product-name">Smartphone X</span>
+                    <span class="product-sku">#SKU-2023-002</span>
+                  </div>
+                </div>
+              </td>
+              <td data-label="Categoria">Celulares</td>
+              <td data-label="Estoque">24</td>
+              <td data-label="Preço">R$ 3.199</td>
+              <td data-label="Status">
+                <span class="stock-level stock-medium">Estoque Médio</span>
+              </td>
+              <td data-label="Ações">
+                <div class="action-buttons">
+                  <a href="#" class="btn btn-info btn-sm">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="#" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            
+            <tr>
+              <td data-label="Produto">
+                <div class="product-info">
+                  <div class="product-image">
+                    <img src="https://via.placeholder.com/50" alt="Fone Bluetooth">
+                  </div>
+                  <div class="product-details">
+                    <span class="product-name">Fone Bluetooth</span>
+                    <span class="product-sku">#SKU-2023-003</span>
+                  </div>
+                </div>
+              </td>
+              <td data-label="Categoria">Acessórios</td>
+              <td data-label="Estoque">5</td>
+              <td data-label="Preço">R$ 349</td>
+              <td data-label="Status">
+                <span class="stock-level stock-low">Estoque Baixo</span>
+              </td>
+              <td data-label="Ações">
+                <div class="action-buttons">
+                  <a href="#" class="btn btn-info btn-sm">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="#" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            
+            <tr>
+              <td data-label="Produto">
+                <div class="product-info">
+                  <div class="product-image">
+                    <img src="https://via.placeholder.com/50" alt="Monitor 27''">
+                  </div>
+                  <div class="product-details">
+                    <span class="product-name">Monitor 27''</span>
+                    <span class="product-sku">#SKU-2023-004</span>
+                  </div>
+                </div>
+              </td>
+              <td data-label="Categoria">Monitores</td>
+              <td data-label="Estoque">0</td>
+              <td data-label="Preço">R$ 1.899</td>
+              <td data-label="Status">
+                <span class="stock-level stock-out">Esgotado</span>
+              </td>
+              <td data-label="Ações">
+                <div class="action-buttons">
+                  <a href="#" class="btn btn-info btn-sm">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="#" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a href="#" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="pagination">
+        <a href="#" class="pagination-item">
+          <i class="fas fa-chevron-left"></i>
+        </a>
+        <a href="#" class="pagination-item active">1</a>
+        <a href="#" class="pagination-item">2</a>
+        <a href="#" class="pagination-item">3</a>
+        <a href="#" class="pagination-item">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

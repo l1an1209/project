@@ -1,8 +1,9 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import ClienteCreate, ListVenda, Pesquisar, PesquisarProduto, ProdutoCreate ,ClienteUpdate, ProdutoUpdate, ClienteDelete,ClienteList,ProdutoList, Venda
+from .views import ClienteCreate,ListVenda, Pesquisar, PesquisarProduto, ProdutoCreate ,ClienteUpdate, ProdutoUpdate, ClienteDelete,ClienteList,ProdutoList, VendaCreate
 from .views import ProdutoDelete
+ 
 
 
 
@@ -24,7 +25,9 @@ urlpatterns = [
    path('Pesquisar/', Pesquisar.as_view(), name='Pesquisar'),
    path('Produto/', PesquisarProduto.as_view(), name='pesquisar-produto'),
    ### tebela de venda 
-    
+    path('cadastrar-venda/', VendaCreate.as_view(), name='cadastrar-venda'),
     path('vendas/', ListVenda.as_view(), name='lista-vendas'),
+    path('vendas/adicionar/', VendaCreate.as_view(), name='nova-venda'),
+    
 ]
 
